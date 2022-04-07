@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { updateUser } from "../../redux/apiRequests";
+import { update } from "../../redux/userSlice";
 import Input from "../InputFields/Input";
 import "./edit.css";
 
@@ -16,17 +18,28 @@ const EditPage = (props) => {
         "https://preview.redd.it/cpwkbke13vv51.png?auto=webp&s=9158e49b35ad2581d840efd2a013a9ead06abbc7",
         "https://preview.redd.it/26s9eejm8vz51.png?auto=webp&s=e38d32ee0ffa0666fade2abd62ed59037c119990"
     ];
-    const [name, setName] = useState('Minh Huy')
-    const [age, setAge] = useState(22);
-    const [about, setAbout] = useState("I'm a software engineer");
-    const [theme, setTheme] = useState("#ff9051");
-    const [url, setUrl] = useState("https://preview.redd.it/rrz3hmsxcll71.png?width=640&crop=smart&auto=webp&s=87cc5ed38d8f088ef9fffef7a4c5756b64309d6a");
 
-    const usernName = useSelector(state => state.user.name);
+    const user = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
+    const [name, setName] = useState(user.name)
+    const [age, setAge] = useState(user.age);
+    const [about, setAbout] = useState(user.about);
+    const [theme, setTheme] = useState("#ff9051");
+    const [url, setUrl] = useState(user.avaUrl);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setEdit(false);
+        const updatedUser = {
+            name: name,
+            age: age,
+            about: about,
+            avaUrl: url,
+            themeColor: theme
+        };
+        updateUser(updatedUser, dispatch);
+        console.log(url)
     };
 
     return (
@@ -36,9 +49,14 @@ const EditPage = (props) => {
                     <button className="close">SAVE</button>
                     <div className="edit-profile">Edit Profile</div>
                     <div className="input-container">
-                        <Input label="Display name" data={usernName} setData={setName} />
-                        <Input label="20" data={age} setData={setAge} />
-                        <Input inputType="textarea" classStyle="input-about" label="About" data={about} setData={setAbout} />
+                        <Input label="Display name" data={user.name} setData={setName} />
+                        <Input label="Age" data={user.age} setData={setAge} />
+                        <Input
+                            inputType="textarea"
+                            classStyle="input-about"
+                            label="About" data={user.about}
+                            setData={setAbout}
+                        />
                         <label>Profile Picture</label>
                         <div className="input-image-container">
                             {avaUrl.map(url => {
