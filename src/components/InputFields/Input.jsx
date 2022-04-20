@@ -1,4 +1,5 @@
-import '../Edit/edit.css'
+import '../Edit/edit.css';
+import '../Post/Post.css';
 
 const Input = (props) => {
     const { label, data, setData, inputType, classStyle } = props;
